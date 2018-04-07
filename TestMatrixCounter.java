@@ -18,31 +18,36 @@ public class TestMatrixCounter extends TestCase {
                                        {0, 0, 1, 0, 0}},1);
   }
   public void testBase() {
-    assertTrue(mc.numAffected()==7);
+    assertTrue(mc.method1()==7);
+    assertTrue(mc.method2()==7);
   }
   
   public void testSetDist() {
     mc.setDist(2);
-    assertTrue(mc.numAffected()==11);
+    assertTrue(mc.method1()==13);
+    assertTrue(mc.method2()==13);
   }
   
   public void testSetMatrix() {
     mc.setMatrix(new int[][]{{0, 0, 0},
                              {0, 1, 0},
                              {0, 0, 0}});
-    assertTrue(mc.numAffected()==5);
+    assertTrue(mc.method1()==5);
+    assertTrue(mc.method2()==5);
   }
   
   public void testOverbounds() {
     mc.setDist(10);
-    assertTrue(mc.numAffected()==11);
+    assertTrue(mc.method1()==15);
+    assertTrue(mc.method2()==15);
   }
   
   public void testEdge(){
     mc.setMatrix(new int[][]{{0, 1, 0},
                              {1, 0, 0},
                              {0, 0, 0}});
-    assertTrue(mc.numAffected()==6);
+    assertTrue(mc.method1()==6);
+    assertTrue(mc.method2()==6);
   }
   
   public void testCorner(){
@@ -50,25 +55,57 @@ public class TestMatrixCounter extends TestCase {
     mc.setMatrix(new int[][]{{1, 0, 0},
                              {0, 0, 0},
                              {0, 0, 1}});
-    assertTrue(mc.numAffected()==8);
+    assertTrue(mc.method1()==9);
+    assertTrue(mc.method2()==9);
   }
   
   public void testEmpty(){
     mc.setMatrix(new int[][]{{0, 0, 0},
                              {0, 0, 0},
                              {0, 0, 0}});
-    assertTrue(mc.numAffected()==0);
+    assertTrue(mc.method1()==0);
+    assertTrue(mc.method2()==0);
   }
   
   public void testFull(){
     mc.setMatrix(new int[][]{{1, 1, 1},
                              {1, 1, 1},
                              {1, 1, 1}});
-    assertTrue(mc.numAffected()==9);
+    assertTrue(mc.method1()==9);
+    assertTrue(mc.method2()==9);
   }
   
   public void testZeroDist(){
     mc.setDist(0);
-    assertTrue(mc.numAffected()==2);
+    assertTrue(mc.method1()==2);
+    assertTrue(mc.method2()==2);
+  }
+  
+  public void testLarge(){
+    mc.setMatrix(new int[][]{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}});
+    assertTrue(mc.method1()==210);
+    assertTrue(mc.method2()==210);
+    mc.setDist(2);
+    assertTrue(mc.method1()==229);
+    assertTrue(mc.method2()==229);
   }
 }
